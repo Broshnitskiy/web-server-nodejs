@@ -1,5 +1,5 @@
 const express = require("express");
-const { NotFound } = require("yarn add");
+const { NotFound } = require("http-errors");
 const Joi = require("joi");
 
 const contactsOperations = require("../../models/contacts");
