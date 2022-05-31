@@ -1,13 +1,16 @@
 const express = require("express");
 const { NotFound } = require("http-errors");
-const contactSchema = require("../../schemas/contactSchema");
-const contactsOperations = require("../../models/contacts");
+const {
+  ContactModel,
+  joiContactSchema,
+  joiFavoriteSchema,
+} = require("../../models/contacts");
 
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    const products = await contactsOperations.listContacts();
+    const products = await ContactModel.find({});
     res.json({
       status: "success",
       code: 200,
@@ -23,7 +26,7 @@ router.get("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await contactsOperations.getContactById(id);
+    const result = await ContactModel.findById(id);
     if (!result) {
       throw new NotFound(`Contact with id=${id} not found`);
     }
@@ -41,13 +44,13 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const { error } = contactSchema.validate(req.body);
+    const { error } = joiContactSchema.validate(req.body);
     if (error) {
       error.status = 400;
       error.message = "missing required name field";
       throw error;
     }
-    const result = await contactsOperations.addContact(req.body);
+    const result = await ContactModel.create(req.body);
     res.status(201).json({
       status: "success",
       code: 201,
@@ -63,7 +66,7 @@ router.post("/", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await contactsOperations.removeContact(id);
+    const result = await ContactModel.findByIdAndRemove(id);
     if (!result) {
       throw new NotFound(`Contact with id=${id} not found`);
     }
@@ -83,17 +86,53 @@ router.delete("/:id", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   try {
-    const { error } = contactSchema.validate(req.body);
+    const { error } = joiContactSchema.validate(req.body);
     if (error) {
       error.status = 400;
       error.message = "missing fields";
       throw error;
     }
     const { id } = req.params;
-    const result = await contactsOperations.updateContact(id, req.body);
+    const result = await ContactModel.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
     if (!result) {
       throw new NotFound(`Contact with id=${id} not found`);
     }
+    res.json({
+      status: "success",
+      code: 200,
+      data: {
+        result,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.patch("/:id/favorite", async (req, res, next) => {
+  try {
+    const { error } = joiFavoriteSchema.validate(req.body);
+    if (error) {
+      error.status = 400;
+      error.message = "missing fields";
+      throw error;
+    }
+    const { id } = req.params;
+    const { favorite } = req.body;
+    const result = await ContactModel.findByIdAndUpdate(
+      id,
+      { favorite },
+      {
+        new: true,
+      }
+    );
+
+    if (!result) {
+      throw new NotFound(`Contact with id=${id} not found`);
+    }
+
     res.json({
       status: "success",
       code: 200,
