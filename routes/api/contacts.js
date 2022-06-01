@@ -10,12 +10,13 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    const products = await ContactModel.find({});
+    const contacts = await ContactModel.find({});
+
     res.json({
       status: "success",
       code: 200,
       data: {
-        result: products,
+        result: contacts,
       },
     });
   } catch (error) {
@@ -116,7 +117,7 @@ router.patch("/:id/favorite", async (req, res, next) => {
     const { error } = joiFavoriteSchema.validate(req.body);
     if (error) {
       error.status = 400;
-      error.message = "missing fields";
+      error.message = "missing field favorite";
       throw error;
     }
     const { id } = req.params;
