@@ -1,4 +1,4 @@
-const { ContactModel, joiFavoriteSchema } = require("../../models/contacts");
+const { ContactModel, joiFavoriteSchema } = require("../../models/contact");
 const { NotFound } = require("http-errors");
 
 const updateFavoriteProp = async (req, res, next) => {

@@ -1,4 +1,4 @@
-const { ContactModel, joiContactSchema } = require("../../models/contacts");
+const { ContactModel, joiContactSchema } = require("../../models/contact");
 
 const addContacts = async (req, res, next) => {
   try {
