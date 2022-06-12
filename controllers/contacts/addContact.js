@@ -8,7 +8,8 @@ const addContacts = async (req, res, next) => {
       error.message = "missing required name field";
       throw error;
     }
-    const result = await ContactModel.create(req.body);
+    const { _id } = req.user;
+    const result = await ContactModel.create({ ...req.body, owner: _id });
     res.status(201).json({
       status: "success",
       code: 201,
