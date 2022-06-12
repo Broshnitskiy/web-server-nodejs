@@ -35,10 +35,15 @@ const joiLoginSchema = Joi.object({
   password: Joi.string().min(4).required(),
 });
 
+const JoiSubscriptionSchema = Joi.object({
+  subscription: Joi.string().valid("starter", "pro", "business").required(),
+});
+
 const UserModel = model("user", mongooseUserSchema);
 
 module.exports = {
   UserModel,
   joiRegisterSchema,
   joiLoginSchema,
+  JoiSubscriptionSchema,
 };

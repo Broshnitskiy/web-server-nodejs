@@ -2,7 +2,7 @@ const { Unauthorized } = require("http-errors");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-const { User, joiLoginSchema } = require("../../models/user");
+const { UserModel, joiLoginSchema } = require("../../models/user");
 
 const { SECRET_KEY } = process.env;
 
@@ -16,7 +16,7 @@ const signIn = async (req, res, next) => {
     }
 
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await UserModel.findOne({ email });
 
     const passCompare = bcrypt.compareSync(password, user.password);
     if (!user || !passCompare) {
@@ -27,7 +27,7 @@ const signIn = async (req, res, next) => {
       id: user._id,
     };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
-    await User.findByIdAndUpdate(user._id, { token });
+    await UserModel.findByIdAndUpdate(user._id, { token });
 
     res.status(201).json({
       status: "success",
