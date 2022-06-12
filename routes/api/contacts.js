@@ -1,14 +1,15 @@
 const express = require("express");
+const { auth } = require("../../middelwares/auth");
 
 const { contacts: ctrl } = require("../../controllers");
 
 const router = express.Router();
 
-router.get("/", ctrl.getAllContacts);
+router.get("/", auth, ctrl.getAllContacts);
 
 router.get("/:id", ctrl.getContactById);
 
-router.post("/", ctrl.addContact);
+router.post("/", auth, ctrl.addContact);
 
 router.delete("/:id", ctrl.deleteContact);
 

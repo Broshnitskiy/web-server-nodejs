@@ -1,4 +1,5 @@
 const express = require("express");
+const { auth } = require("../../middelwares/auth");
 
 const { users: ctrl } = require("../../controllers");
 
@@ -8,8 +9,8 @@ router.post("/signup", ctrl.signUp);
 
 router.post("/signin", ctrl.signIn);
 
-router.get("/signout", ctrl.signOut);
+router.get("/signout", auth, ctrl.signOut);
 
-router.get("/current", ctrl.getCurrent);
+router.get("/current", auth, ctrl.getCurrent);
 
 module.exports = router;
