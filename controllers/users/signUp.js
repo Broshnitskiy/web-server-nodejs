@@ -1,5 +1,6 @@
 const { Conflict } = require("http-errors");
 const bcrypt = require("bcryptjs");
+const gravatar = require("gravatar");
 
 const { UserModel, joiRegisterSchema } = require("../../models/user");
 
@@ -18,8 +19,14 @@ const signUp = async (req, res, next) => {
       throw new Conflict(`${email} Email in use`);
     }
 
+    const avatarURL = gravatar.url(email);
+
     const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-    const result = await UserModel.create({ email, password: hashPassword });
+    const result = await UserModel.create({
+      email,
+      password: hashPassword,
+      avatarURL,
+    });
 
     res.status(201).json({
       status: "success",
