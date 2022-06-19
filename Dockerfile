@@ -8,5 +8,5 @@ RUN npm install
 
 EXPOSE 7777
 
-CMD [ "cross-env", "NODE_ENV=production","node","./bin/server.js"]
+CMD [ "cross-env", "NODE_ENV=production","node","./bin/server"]
 

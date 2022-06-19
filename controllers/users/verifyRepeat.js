@@ -20,8 +20,16 @@ const verifyRepeat = async (req, res, next) => {
       };
 
       await sendEmail(mail);
+
+      res.status(200).json({
+        status: "success",
+        code: 200,
+        message: "Verification email sent",
+      });
     } else {
       res.status(400).json({
+        status: "bad request",
+        code: 400,
         message: "Verification has already been passed",
       });
     }
